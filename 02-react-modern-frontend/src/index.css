@@ -270,6 +270,21 @@ body > #root {
   transform: translateY(-2px) scale(1.02);
 }
 
+.search-container.has-error {
+  border-color: #FF1744;
+  background: linear-gradient(135deg, rgba(255, 240, 240, 0.95) 0%, rgba(255, 230, 230, 0.95) 100%);
+  box-shadow: 0 4px 20px rgba(255, 23, 68, 0.3);
+}
+
+.search-container.has-error:focus-within {
+  border-color: #FF1744;
+  box-shadow: 0 6px 30px rgba(255, 23, 68, 0.4), 0 0 0 4px rgba(255, 23, 68, 0.1);
+}
+
+.search-container.shake {
+  animation: shake 0.5s ease-in-out;
+}
+
 .search-input {
   flex: 1;
   background: transparent;
@@ -354,6 +369,29 @@ body > #root {
 
 .search-button:hover .search-icon {
   transform: scale(1.1);
+}
+
+/* Search Error Message */
+.search-error {
+  margin-top: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: linear-gradient(135deg, rgba(255, 23, 68, 0.1) 0%, rgba(255, 82, 82, 0.1) 100%);
+  border: 2px solid rgba(255, 23, 68, 0.3);
+  border-radius: var(--radius-md);
+  color: #C62828;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  animation: slideUp 0.3s ease-out;
+  box-shadow: 0 2px 8px rgba(255, 23, 68, 0.15);
+}
+
+.error-icon-small {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  animation: pulse 1s ease-in-out infinite;
 }
 
 /* ===== Weather Section ===== */
@@ -1278,6 +1316,15 @@ body > #root {
     border-width: 3px;
     margin-bottom: 0.5rem;
   }
+
+  .search-error {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .error-icon-small {
+    font-size: 1.1rem;
+  }
   
   .search-input {
     font-size: 0.95rem;
@@ -1590,6 +1637,15 @@ body > #root {
   .search-input {
     font-size: 0.85rem;
     padding: 0.65rem 0.85rem;
+  }
+
+  .search-error {
+    font-size: 0.8rem;
+    padding: 0.45rem 0.65rem;
+  }
+
+  .error-icon-small {
+    font-size: 1rem;
   }
 
   .city-name {

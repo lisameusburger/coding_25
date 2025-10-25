@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 interface SearchBarProps {
   searchQuery: string;
   onSearchChange: (value: string) => void;
@@ -11,26 +13,71 @@ const SearchBar = ({
   onSearchSubmit,
   placeholder = "Search for a city..."
 }: SearchBarProps) => {
+  const [validationError, setValidationError] = useState('');
+  const [showShake, setShowShake] = useState(false);
+
+  const validateInput = (input: string): string => {
+    const trimmed = input.trim();
+    
+    if (!trimmed) {
+      return 'Please enter a city name';
+    }
+    
+    if (trimmed.length < 2) {
+      return 'City name is too short';
+    }
+    
+    if (trimmed.length > 85) {
+      return 'City name is too long';
+    }
+    
+    // Check for invalid characters (allow letters, spaces, hyphens, apostrophes)
+    const validPattern = /^[a-zA-Z\s\-'àâäãåèéêëìíîïòóôöõùúûüñçčšžÀÂÄÃÅÈÉÊËÌÍÎÏÒÓÔÖÕÙÚÛÜÑßÇČŠŽ]+$/;
+    if (!validPattern.test(trimmed)) {
+      return 'City name contains invalid characters';
+    }
+    
+    return '';
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      onSearchSubmit(searchQuery.trim());
+    const error = validateInput(searchQuery);
+    
+    if (error) {
+      setValidationError(error);
+      setShowShake(true);
+      setTimeout(() => setShowShake(false), 500);
+      return;
     }
+    
+    setValidationError('');
+    onSearchSubmit(searchQuery.trim());
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onSearchChange(e.target.value);
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && searchQuery.trim()) {
-      onSearchSubmit(searchQuery.trim());
+    const value = e.target.value;
+    onSearchChange(value);
+    
+    // Clear validation error when user starts typing
+    if (validationError) {
+      setValidationError('');
     }
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSubmit(e as unknown as React.FormEvent);
+    }
+  };
+
+  const hasError = !!validationError;
+  const isEmpty = !searchQuery.trim();
+
   return (
-    <form className="search-form" onSubmit={handleSubmit}>
-      <div className="search-container">
+    <form className="search-form" onSubmit={handleSubmit} noValidate>
+      <div className={`search-container ${hasError ? 'has-error' : ''} ${showShake ? 'shake' : ''}`}>
         <input
           type="text"
           className="search-input"
@@ -39,13 +86,17 @@ const SearchBar = ({
           onChange={handleChange}
           onKeyPress={handleKeyPress}
           aria-label="City search"
+          aria-invalid={hasError}
+          aria-describedby={hasError ? "search-error" : undefined}
           autoComplete="off"
+          maxLength={85}
         />
         <button 
           type="submit" 
           className="search-button" 
           aria-label="Search"
-          disabled={!searchQuery.trim()}
+          disabled={isEmpty}
+          title={isEmpty ? "Please enter a city name" : "Search"}
         >
           <svg
             className="search-icon"
@@ -63,6 +114,12 @@ const SearchBar = ({
           </svg>
         </button>
       </div>
+      {validationError && (
+        <div id="search-error" className="search-error" role="alert">
+          <span className="error-icon-small">⚠️</span>
+          {validationError}
+        </div>
+      )}
     </form>
   );
 };
