@@ -11,7 +11,7 @@ const App = () => {
   
   // Custom hooks for clean separation of concerns
   const { weatherData, forecastData, loading, error, fetchWeather, retry } = useWeather();
-  const { favorites } = useFavorites();
+  const { favorites, addFavorite, removeFavorite, isFavorite } = useFavorites();
   const { addSearch } = useRecentSearches();
 
   const handleSearchChange = (value: string) => {
@@ -22,6 +22,22 @@ const App = () => {
     console.log('🔍 Searching for city:', city);
     await fetchWeather(city);
     addSearch(city);
+  };
+
+  const handleToggleFavorite = () => {
+    if (weatherData) {
+      if (isFavorite(weatherData.name)) {
+        removeFavorite(weatherData.name);
+      } else {
+        addFavorite(weatherData.name, weatherData.sys.country);
+      }
+    }
+  };
+
+  const handleFavoriteClick = (cityName: string) => {
+    setSearchQuery(cityName);
+    fetchWeather(cityName);
+    addSearch(cityName);
   };
 
   return (
@@ -43,9 +59,16 @@ const App = () => {
                 <p className="empty-state">No favorites yet</p>
               ) : (
                 favorites.map((city, index) => (
-                  <div key={index} className="favorite-item">
-                    {city.name}, {city.country}
-                  </div>
+                  <button
+                    key={index}
+                    className="favorite-item"
+                    onClick={() => handleFavoriteClick(city.name)}
+                  >
+                    <span className="favorite-icon">💖</span>
+                    <span className="favorite-name">
+                      {city.name}, {city.country}
+                    </span>
+                  </button>
                 ))
               )}
             </div>
@@ -70,7 +93,11 @@ const App = () => {
               <ErrorMessage message={error} onRetry={retry} />
             ) : (
               <>
-                <WeatherCard weatherData={weatherData} />
+                <WeatherCard 
+                  weatherData={weatherData}
+                  isFavorite={weatherData ? isFavorite(weatherData.name) : false}
+                  onToggleFavorite={handleToggleFavorite}
+                />
                 {weatherData && <Forecast forecastData={forecastData} />}
               </>
             )}

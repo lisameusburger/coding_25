@@ -2,9 +2,11 @@ import type { WeatherData } from '../types';
 
 interface WeatherCardProps {
   weatherData: WeatherData | null;
+  isFavorite?: boolean;
+  onToggleFavorite?: () => void;
 }
 
-const WeatherCard = ({ weatherData }: WeatherCardProps) => {
+const WeatherCard = ({ weatherData, isFavorite = false, onToggleFavorite }: WeatherCardProps) => {
   if (!weatherData) {
     return (
       <div className="welcome-message">
@@ -47,10 +49,24 @@ const WeatherCard = ({ weatherData }: WeatherCardProps) => {
     <div className="weather-card">
       {/* City Header */}
       <div className="weather-card-header">
-        <h2 className="city-name">
-          {name}, {sys.country}
-        </h2>
-        <div className="weather-emoji">{getWeatherEmoji(weatherInfo.main)}</div>
+        <div className="city-header-left">
+          <h2 className="city-name">
+            {name}, {sys.country}
+          </h2>
+        </div>
+        <div className="city-header-right">
+          {onToggleFavorite && (
+            <button 
+              className="favorite-button"
+              onClick={onToggleFavorite}
+              aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+              title={isFavorite ? "Remove from favorites" : "Add to favorites"}
+            >
+              {isFavorite ? '💖' : '🤍'}
+            </button>
+          )}
+          <div className="weather-emoji">{getWeatherEmoji(weatherInfo.main)}</div>
+        </div>
       </div>
 
       {/* Main Temperature Display */}

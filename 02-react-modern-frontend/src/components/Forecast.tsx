@@ -58,8 +58,8 @@ const Forecast = ({ forecastData }: ForecastProps) => {
       groupedByDate[date].push(item);
     });
 
-    // Get first 5 days
-    const dates = Object.keys(groupedByDate).slice(0, 5);
+    // Get first 6 days
+    const dates = Object.keys(groupedByDate).slice(0, 6);
     
     dates.forEach((date) => {
       const dayItems = groupedByDate[date];
@@ -96,7 +96,7 @@ const Forecast = ({ forecastData }: ForecastProps) => {
 
   return (
     <div className="forecast-container">
-      <h3 className="forecast-title">5-Day Forecast</h3>
+      <h3 className="forecast-title">6-Day Forecast</h3>
       <div className="forecast-scroll-wrapper">
         <div className="forecast-cards">
           {dailyForecasts.map((day, index) => (

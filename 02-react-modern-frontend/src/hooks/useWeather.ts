@@ -54,7 +54,7 @@ const useWeather = (): UseWeatherReturn => {
 
       const weatherData: WeatherData = await weatherResponse.json();
 
-      // Fetch 5-day forecast
+      // Fetch 6-day forecast
       const forecastResponse = await fetch(
         `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=metric`
       );
