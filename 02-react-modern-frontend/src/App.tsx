@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import type { WeatherData, FavoriteCity } from './types';
 import SearchBar from './components/SearchBar';
+import WeatherCard from './components/WeatherCard';
+import { getRandomMockWeather } from './mockData';
 
 const App = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -14,9 +16,13 @@ const App = () => {
   };
 
   const handleSearchSubmit = (city: string) => {
-    // Weather search will be implemented later
-    console.log('Searching for city:', city);
-    // Future: fetch weather data for the city
+    console.log('🔍 Searching for city:', city);
+    
+    // Get random weather data for this search
+    const randomWeather = getRandomMockWeather(city);
+    
+    setWeatherData(randomWeather);
+    console.log('✨ Random weather loaded:', randomWeather.weather[0].main, randomWeather.main.temp + '°C');
   };
 
   return (
@@ -54,23 +60,12 @@ const App = () => {
             searchQuery={searchQuery}
             onSearchChange={handleSearchChange}
             onSearchSubmit={handleSearchSubmit}
-            placeholder="Search for a city... (e.g., London, Tokyo, New York)"
+            placeholder="Search any city - weather changes randomly! ✨"
           />
 
           {/* Weather Display Area */}
           <section className="weather-section">
-            {!weatherData ? (
-              <div className="welcome-message">
-                <div className="welcome-icon">🌸☀️🌸</div>
-                <h2>Welcome to Your Fabulous Weather Dashboard</h2>
-                <p>✨ Search for a city to see the most gorgeous weather conditions ✨</p>
-              </div>
-            ) : (
-              <div className="weather-display">
-                {/* Weather data will be displayed here */}
-                <p>Weather data for {weatherData.name} will appear here</p>
-              </div>
-            )}
+            <WeatherCard weatherData={weatherData} />
           </section>
         </main>
       </div>
