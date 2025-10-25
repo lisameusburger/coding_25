@@ -94,6 +94,8 @@ body > #root {
   border-bottom: 3px solid #FFB6D9;
   position: relative;
   overflow: hidden;
+  animation: slideInFromLeft 0.6s ease-out;
+  backdrop-filter: blur(10px);
 }
 
 .header::after {
@@ -140,7 +142,7 @@ body > #root {
 
 /* ===== Sidebar ===== */
 .sidebar {
-  background: linear-gradient(135deg, #FFF0F8 0%, #FFE4F0 100%);
+  background: linear-gradient(135deg, rgba(255, 240, 248, 0.95) 0%, rgba(255, 228, 240, 0.95) 100%);
   border-radius: var(--radius-lg);
   padding: var(--spacing-md);
   box-shadow: 0 8px 25px rgba(255, 20, 147, 0.25);
@@ -148,6 +150,8 @@ body > #root {
   height: fit-content;
   position: sticky;
   top: var(--spacing-lg);
+  backdrop-filter: blur(15px);
+  animation: slideInFromLeft 0.7s ease-out;
 }
 
 .sidebar-section {
@@ -195,9 +199,14 @@ body > #root {
 .favorite-item:hover {
   background: linear-gradient(135deg, #E91E63 0%, #FF1493 100%);
   color: #FFFFFF;
-  transform: translateX(8px) scale(1.05);
+  transform: translateX(10px) scale(1.08);
   border-color: #FFB6D9;
-  box-shadow: 0 4px 15px rgba(255, 20, 147, 0.4);
+  box-shadow: 0 6px 20px rgba(255, 20, 147, 0.5);
+}
+
+.favorite-item:active {
+  transform: translateX(8px) scale(1.03);
+  transition-duration: 0.1s;
 }
 
 .favorite-icon {
@@ -245,18 +254,20 @@ body > #root {
 .search-container {
   display: flex;
   gap: var(--spacing-sm);
-  background: linear-gradient(135deg, #FFF0F8 0%, #FFFFFF 100%);
+  background: linear-gradient(135deg, rgba(255, 240, 248, 0.95) 0%, rgba(255, 255, 255, 0.95) 100%);
   padding: var(--spacing-xs);
   border-radius: 50px;
   box-shadow: 0 8px 25px rgba(255, 20, 147, 0.25);
   border: 3px solid #FFB6D9;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  animation: slideUp 0.6s ease-out;
 }
 
 .search-container:focus-within {
   border-color: #E91E63;
-  box-shadow: 0 8px 30px rgba(255, 20, 147, 0.4);
-  transform: scale(1.02);
+  box-shadow: 0 8px 35px rgba(255, 20, 147, 0.5), 0 0 0 4px rgba(255, 20, 147, 0.1);
+  transform: translateY(-2px) scale(1.02);
 }
 
 .search-input {
@@ -281,22 +292,48 @@ body > #root {
   border-radius: 50px;
   padding: var(--spacing-sm) var(--spacing-md);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
   justify-content: center;
   min-width: 48px;
   box-shadow: 0 4px 15px rgba(255, 20, 147, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.search-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.search-button:hover::before {
+  width: 300px;
+  height: 300px;
 }
 
 .search-button:hover:not(:disabled) {
   background: linear-gradient(135deg, #C2185B 0%, #E91E63 100%);
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 6px 20px rgba(255, 20, 147, 0.5);
+  transform: translateY(-3px) scale(1.08) rotate(3deg);
+  box-shadow: 0 8px 25px rgba(255, 20, 147, 0.6);
 }
 
 .search-button:active:not(:disabled) {
-  transform: translateY(-1px) scale(1.02);
+  transform: translateY(-1px) scale(1.03) rotate(0deg);
+  transition-duration: 0.1s;
+}
+
+.search-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(255, 20, 147, 0.3), 0 4px 15px rgba(255, 20, 147, 0.3);
 }
 
 .search-button:disabled {
@@ -310,11 +347,18 @@ body > #root {
   height: 22px;
   color: #FFFFFF;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  position: relative;
+  z-index: 1;
+  transition: transform 0.3s ease;
+}
+
+.search-button:hover .search-icon {
+  transform: scale(1.1);
 }
 
 /* ===== Weather Section ===== */
 .weather-section {
-  background: linear-gradient(135deg, #FFF0F8 0%, #FFE4F0 50%, #FFF0F8 100%);
+  background: linear-gradient(135deg, rgba(255, 240, 248, 0.95) 0%, rgba(255, 228, 240, 0.95) 50%, rgba(255, 240, 248, 0.95) 100%);
   border-radius: 30px;
   padding: var(--spacing-xl);
   box-shadow: 0 8px 30px rgba(255, 20, 147, 0.25);
@@ -323,6 +367,8 @@ body > #root {
   position: relative;
   overflow: visible;
   width: 100%;
+  backdrop-filter: blur(20px);
+  animation: scaleIn 0.7s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .weather-section::before {
@@ -349,7 +395,7 @@ body > #root {
 .welcome-message {
   text-align: center;
   color: var(--text-secondary);
-  animation: fadeIn 0.5s ease;
+  animation: scaleIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   z-index: 1;
 }
@@ -357,7 +403,7 @@ body > #root {
 .welcome-icon {
   font-size: 6rem;
   margin-bottom: var(--spacing-md);
-  animation: float 3s ease-in-out infinite;
+  animation: float 4s ease-in-out infinite, pulse 3s ease-in-out infinite;
   filter: drop-shadow(0 4px 8px rgba(255, 20, 147, 0.3));
 }
 
@@ -392,7 +438,7 @@ body > #root {
   max-width: 800px;
   margin: 0 auto;
   padding: var(--spacing-xl);
-  animation: fadeIn 0.5s ease;
+  animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Weather Card Header */
@@ -447,12 +493,14 @@ body > #root {
 }
 
 .favorite-button:hover {
-  transform: scale(1.2);
-  filter: drop-shadow(0 4px 12px rgba(255, 20, 147, 0.5));
+  transform: scale(1.3) rotate(10deg);
+  filter: drop-shadow(0 6px 15px rgba(255, 20, 147, 0.6));
+  animation: pulse 0.6s ease-in-out;
 }
 
 .favorite-button:active {
-  transform: scale(1.1);
+  transform: scale(1.15) rotate(5deg);
+  transition-duration: 0.1s;
 }
 
 .favorite-button:focus {
@@ -469,6 +517,7 @@ body > #root {
   gap: var(--spacing-lg);
   margin: var(--spacing-xl) 0;
   flex-wrap: wrap;
+  animation: scaleIn 1s cubic-bezier(0.4, 0, 0.2, 1) 0.2s backwards;
 }
 
 .temp-display {
@@ -503,6 +552,14 @@ body > #root {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: float 4s ease-in-out infinite;
+}
+
+.weather-icon-container:hover {
+  transform: scale(1.15) rotate(15deg);
+  box-shadow: 0 12px 40px rgba(255, 20, 147, 0.6);
+  animation: float 4s ease-in-out infinite, glow 2s ease-in-out infinite;
 }
 
 .weather-icon-img {
@@ -558,23 +615,38 @@ body > #root {
 }
 
 .detail-card {
-  background: linear-gradient(135deg, #FFF0F8 0%, #FFFFFF 100%);
+  background: linear-gradient(135deg, rgba(255, 240, 248, 0.9) 0%, rgba(255, 255, 255, 0.9) 100%);
   border-radius: var(--radius-lg);
   padding: var(--spacing-md);
   border: 2px solid #FFB6D9;
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 15px rgba(255, 20, 147, 0.15);
   min-width: 0;
   overflow: hidden;
+  backdrop-filter: blur(10px);
+  animation: slideUp 0.6s ease-out;
+  animation-fill-mode: backwards;
 }
 
+.detail-card:nth-child(1) { animation-delay: 0.1s; }
+.detail-card:nth-child(2) { animation-delay: 0.2s; }
+.detail-card:nth-child(3) { animation-delay: 0.3s; }
+.detail-card:nth-child(4) { animation-delay: 0.4s; }
+.detail-card:nth-child(5) { animation-delay: 0.5s; }
+
 .detail-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 25px rgba(255, 20, 147, 0.3);
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 12px 30px rgba(255, 20, 147, 0.35);
   border-color: #E91E63;
+  background: linear-gradient(135deg, rgba(255, 240, 248, 1) 0%, rgba(255, 255, 255, 1) 100%);
+}
+
+.detail-card:active {
+  transform: translateY(-4px) scale(1.01);
+  transition-duration: 0.1s;
 }
 
 .detail-icon {
@@ -872,19 +944,35 @@ body > #root {
 .forecast-card {
   flex: 0 0 auto;
   width: 140px;
-  background: linear-gradient(135deg, #FFF0F8 0%, #FFE4F0 100%);
+  background: linear-gradient(135deg, rgba(255, 240, 248, 0.95) 0%, rgba(255, 228, 240, 0.95) 100%);
   border-radius: var(--radius-lg);
   padding: var(--spacing-md);
   border: 2px solid #FFB6D9;
   text-align: center;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 15px rgba(255, 20, 147, 0.15);
+  backdrop-filter: blur(10px);
+  animation: popIn 0.6s ease-out;
+  animation-fill-mode: backwards;
 }
 
+.forecast-card:nth-child(1) { animation-delay: 0.1s; }
+.forecast-card:nth-child(2) { animation-delay: 0.2s; }
+.forecast-card:nth-child(3) { animation-delay: 0.3s; }
+.forecast-card:nth-child(4) { animation-delay: 0.4s; }
+.forecast-card:nth-child(5) { animation-delay: 0.5s; }
+.forecast-card:nth-child(6) { animation-delay: 0.6s; }
+
 .forecast-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 8px 25px rgba(255, 20, 147, 0.3);
+  transform: translateY(-12px) scale(1.05);
+  box-shadow: 0 12px 30px rgba(255, 20, 147, 0.4);
   border-color: #E91E63;
+  background: linear-gradient(135deg, rgba(255, 240, 248, 1) 0%, rgba(255, 228, 240, 1) 100%);
+}
+
+.forecast-card:active {
+  transform: translateY(-8px) scale(1.02);
+  transition-duration: 0.1s;
 }
 
 .forecast-day {
@@ -912,6 +1000,12 @@ body > #root {
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 12px rgba(255, 20, 147, 0.3);
+  transition: all 0.3s ease;
+}
+
+.forecast-card:hover .forecast-icon-container {
+  transform: rotate(360deg) scale(1.1);
+  box-shadow: 0 6px 18px rgba(255, 20, 147, 0.5);
 }
 
 .forecast-icon {
