@@ -1,28 +1,27 @@
 import { useState } from 'react';
-import type { WeatherData, FavoriteCity } from './types';
 import SearchBar from './components/SearchBar';
 import WeatherCard from './components/WeatherCard';
-import { getRandomMockWeather } from './mockData';
+import Forecast from './components/Forecast';
+import Loading from './components/Loading';
+import ErrorMessage from './components/ErrorMessage';
+import { useWeather, useFavorites, useRecentSearches } from './hooks';
 
 const App = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
-  const [favorites, setFavorites] = useState<FavoriteCity[]>([]);
-
-  // Note: setWeatherData and setFavorites will be used when API integration is added
+  
+  // Custom hooks for clean separation of concerns
+  const { weatherData, forecastData, loading, error, fetchWeather, retry } = useWeather();
+  const { favorites } = useFavorites();
+  const { addSearch } = useRecentSearches();
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
   };
 
-  const handleSearchSubmit = (city: string) => {
+  const handleSearchSubmit = async (city: string) => {
     console.log('🔍 Searching for city:', city);
-    
-    // Get random weather data for this search
-    const randomWeather = getRandomMockWeather(city);
-    
-    setWeatherData(randomWeather);
-    console.log('✨ Random weather loaded:', randomWeather.weather[0].main, randomWeather.main.temp + '°C');
+    await fetchWeather(city);
+    addSearch(city);
   };
 
   return (
@@ -60,12 +59,21 @@ const App = () => {
             searchQuery={searchQuery}
             onSearchChange={handleSearchChange}
             onSearchSubmit={handleSearchSubmit}
-            placeholder="Search any city - weather changes randomly! ✨"
+            placeholder="Search for a city (e.g., London, Tokyo, New York)..."
           />
 
           {/* Weather Display Area */}
           <section className="weather-section">
-            <WeatherCard weatherData={weatherData} />
+            {loading ? (
+              <Loading />
+            ) : error ? (
+              <ErrorMessage message={error} onRetry={retry} />
+            ) : (
+              <>
+                <WeatherCard weatherData={weatherData} />
+                {weatherData && <Forecast forecastData={forecastData} />}
+              </>
+            )}
           </section>
         </main>
       </div>
